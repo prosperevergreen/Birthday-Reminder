@@ -96,10 +96,10 @@ class ViewBirthday : AppCompatActivity() {
                 val selectedDate: Calendar = Calendar.getInstance()
 
                 if (prevDate.size == 3) {
-                    mDialogue.viewDate.text = "${prevDate[0]}.${prevDate[1]}.${prevDate[2]}"
+                    mDialogue.viewDate.text = "${prevDate[0]}/${prevDate[1]}/${prevDate[2]}"
                     now.set(prevDate[2].toInt(),prevDate[1].toInt(),prevDate[0].toInt())
                 } else {
-                    mDialogue.viewDate.text = "${prevDate[0]}.${prevDate[1]}"
+                    mDialogue.viewDate.text = "${prevDate[0]}/${prevDate[1]}"
                     mDialogue.switch_year.isChecked = true
                     now.set(prevDate[1].toInt(),prevDate[0].toInt())
                 }
@@ -127,25 +127,24 @@ class ViewBirthday : AppCompatActivity() {
                 }
 
                 mDialogue.switch_year.setOnCheckedChangeListener { buttonView, isChecked ->
+                    val temp = mDialogue.viewDate.text.split("/")
                     if (isChecked) {
-                        val myFormat = "dd/MM" // mention the format you need
-                        val sdf = SimpleDateFormat(myFormat, Locale.US)
-                        mDialogue.viewDate.text = sdf.format(selectedDate.time)
-                        textViewDOB.text = sdf.format(selectedDate.time)
+                        mDialogue.viewDate.text = "${temp[0]}/${temp[1]}"
                     } else {
-                        val myFormat = "dd/MM/yyyy" // mention the format you need
-                        val sdf = SimpleDateFormat(myFormat, Locale.US)
-                        mDialogue.viewDate.text = sdf.format(selectedDate.time)
-                        textViewDOB.text = sdf.format(selectedDate.time)
+                        mDialogue.viewDate.text = "${temp[0]}/${temp[1]}/${selectedDate.get(Calendar.YEAR)}"
                     }
                 }
                 mDialogue.fabAddLocalUser.setOnClickListener {
                     val editedName = mDialogue.addNameLocalInput.text.toString()
                     val editedSurname = mDialogue.addSurnameLocalInput.text.toString()
+                    val temp = mDialogue.viewDate.text.split("/")
                     if (mDialogue.switch_year.isChecked) {
-                        selectedDate.set(Calendar.YEAR, 0) // mention the format you need
+                        selectedDate.set(0,temp[1].toInt(), temp[0].toInt())
+                        textViewDOB.text = "Birthday: ${temp[0]}/${temp[1]}"// mention the format you need
+                    }else{
+                        textViewDOB.text = "Birthday: ${temp[0]}/${temp[1]}/${temp[2]}"
+                        selectedDate.set(temp[2].toInt(),temp[1].toInt(), temp[0].toInt())
                     }
-
 
                     //save new values for update
                     chosen.canEdit = true
